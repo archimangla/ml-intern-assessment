@@ -1,79 +1,46 @@
-This document summarizes the design choices made while implementing the trigram language model for the AI/ML intern assignment.
+Evaluation Summary
 
-1. Model Design
-Data Structures
+This document gives a short overview of the approach I followed while implementing the trigram model.
 
-defaultdict(lambda: defaultdict(int)) for trigram counts
+Model Design
 
-Keys: (w1, w2) bigram context
+I used two dictionaries:
 
-Values: mapping of possible w3 → count
+- one for bigram counts `(w1, w2)`
+- one mapping each bigram to its possible next words with their counts
 
-defaultdict(int) for bigram counts
+`defaultdict` helped keep the updates simple without extra condition checks.  
+To handle sentence boundaries, I added `<s>` as the start token (twice) and `</s>` as the end token.
 
-Used for probability normalization
+Training Steps
 
-These structures were chosen to keep indexing simple, avoid key errors, and ensure constant-time insertions.
+During training:
 
-Padding Tokens
+1. The input text is lowercased and tokenized.
+2. I prepend two start tokens and append an end token.
+3. I scan through the tokens in windows of three and update trigram and bigram counts.
 
-Two special tokens were added:
+This straightforward method ensures consistent trigram formation.
 
-<s> for start
+Generation Logic
 
-</s> for end
+Text generation begins with the two start tokens.
 
-Padding with two start tokens (<s> <s>) allows the model to generate proper beginnings.
+At each step, the model:
 
-2. Training Logic
+- finds the possible next words for the current bigram
+- converts counts into sampling weights
+- picks a word using `random.choices`
+- shifts the window forward
 
-Training consists of:
+Generation stops either when the end token appears or when the maximum length is reached.
 
-Lowercasing and tokenizing text using a regex (\b\w+\b)
+Testing
 
-Padding tokens with <s> <s> at the start and </s> at the end
+The provided tests check whether training and generation behave correctly, including boundary cases.  
+With the current setup (using `pytest.ini` to fix import paths), all tests pass.
 
-Counting trigrams of the form (w1, w2 → w3)
+Notes
 
-This ensures consistent sequence boundaries and predictable trigram formation.
-
-3. Generation Logic
-
-Text generation is iterative:
-
-Start from context (<s>, <s>)
-
-Look up possible next words for the current context
-
-Sample the next token using random.choices() with probability weights
-
-Slide window: (w1, w2) → (w2, w3)
-
-Stop at </s> or when max_length is reached
-
-Weighted sampling ensures realistic, probability-driven generation.
-
-4. Testing and Validation
-
-All tests are executed using:
-
-pytest
-
-
-Pytest configuration is handled through pytest.ini, ensuring:
-
-only tests/ is scanned
-
-src/ is added to the Python path
-
-The model passes all provided tests.
-
-5. Notes for Evaluators
-
-Implementation sticks to classical trigram modeling principles.
-
-No external NLP libraries were used; everything is implemented from scratch.
-
-The code is modular and uses a helper function (_next_word) for clarity.
-
-Behavior matches the expectations defined in test_ngram.py.
+The focus was on clarity and correctness.  
+The implementation remains close to the standard trigram approach and fits fully within the `trigram-assignment` directory structure.
