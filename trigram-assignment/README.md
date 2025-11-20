@@ -1,11 +1,52 @@
-# Trigram Language Model
+Trigram Model — AI/ML Intern Assignment
 
-This directory contains the core assignment files for the Trigram Language Model.
+This project implements a simple trigram language model capable of training on text and generating new text based on trigram probabilities.
 
-## How to Run 
+Installation
 
-    # Instructions on how to run. (filled by you)
+Install dependencies using:
 
-## Design Choices
+pip install -r requirements.txt
 
-Please document your design choices in the `evaluation.md` file. This should be a 1-page summary of the decisions you made and why you made them.
+Project Structure
+trigram-assignment/
+│
+├── src/
+│   ├── ngram_model.py  
+│   ├── generate.py     
+│   └── utils.py
+│
+├── tests/
+│   └── test_ngram.py    
+│
+├── data/
+│   └── example_corpus.txt
+│
+├── README.md
+└── evaluation.md
+
+How to Run the Model
+Train + Generate (inside Python)
+from src.ngram_model import TrigramModel
+
+model = TrigramModel()
+model.fit("your training text here")
+
+print(model.generate(max_length=50))
+
+Running Tests
+
+From inside the trigram-assignment folder:
+
+pytest
+
+
+Pytest configuration (pytest.ini) ensures that tests only run inside the tests/ directory.
+
+Notes for Reviewers
+
+The trigram model uses start/end tokens to support generation.
+
+Probabilities are computed from raw counts using normalized trigram frequencies.
+
+Random sampling uses weighted probabilities to select the next word.
