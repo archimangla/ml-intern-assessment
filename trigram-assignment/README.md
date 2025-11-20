@@ -10,6 +10,8 @@ Install all required dependencies:
 pip install -r requirements.txt
 
 Project Structure
+
+```
 trigram-assignment/
 │
 ├── src/
@@ -25,6 +27,8 @@ trigram-assignment/
 │
 ├── pytest.ini
 └── evaluation.md
+```
+
 
 Usage Example
 from src.ngram_model import TrigramModel
